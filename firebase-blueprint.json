@@ -1,0 +1,96 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Stores the brand identity and preferences for a creator.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The Firebase Auth UID." },
+        "email": { "type": "string", "format": "email" },
+        "niche": { "type": "string" },
+        "platform": { "type": "string", "enum": ["TikTok", "YouTube", "Instagram"] },
+        "brandVoice": { "type": "string" },
+        "targetAudience": { "type": "string" },
+        "goals": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "niche", "platform"]
+    },
+    "ContentSprint": {
+      "title": "Content Sprint",
+      "description": "A 7-day content strategy generated for a user.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "niche": { "type": "string" },
+        "platform": { "type": "string" },
+        "trends": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "insight": { "type": "string" }
+            }
+          }
+        },
+        "sprint": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "day": { "type": "integer" },
+              "concept": { "type": "string" },
+              "title": { "type": "string" },
+              "hook": { "type": "string" },
+              "outline": {
+                "type": "object",
+                "properties": {
+                  "hook": { "type": "string" },
+                  "value": { "type": "string" },
+                  "cta": { "type": "string" }
+                }
+              },
+              "thumbnail": { "type": "string" },
+              "audio": { "type": "string" },
+              "algoHack": { "type": "string" },
+              "keywords": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "growthAdvice": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "sprint"]
+    },
+    "CommunityPost": {
+      "title": "Community Post",
+      "description": "A post shared by a creator in the community feed.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userPhoto": { "type": "string" },
+        "content": { "type": "string" },
+        "sprintId": { "type": "string", "description": "Optional reference to a shared sprint." },
+        "likes": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "content", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile documents."
+    },
+    "/sprints/{sprintId}": {
+      "schema": "ContentSprint",
+      "description": "Generated content sprints."
+    },
+    "/community/{postId}": {
+      "schema": "CommunityPost",
+      "description": "Community feed posts."
+    }
+  }
+}

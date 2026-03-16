@@ -1,0 +1,140 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {userId} (Firebase Auth UID)
+    // Fields:
+    //   - uid: string (required) - The user's UID
+    //   - email: string (required) - The user's email
+    //   - niche: string (required)
+    //   - platform: string (required)
+    //   - brandVoice: string
+    //   - targetAudience: string
+    //   - goals: string
+    //   - createdAt: timestamp
+    //
+    // Collection: sprints
+    // Document ID: {sprintId} (Auto-generated)
+    // Fields:
+    //   - userId: string (required) - Reference to users collection
+    //   - niche: string
+    //   - platform: string
+    //   - trends: list of maps
+    //   - sprint: list of maps (required)
+    //   - growthAdvice: string
+    //   - createdAt: timestamp
+    //
+    // ===============================================================
+
+    // Collection: community
+    // Document ID: {postId} (Auto-generated)
+    // Fields:
+    //   - userId: string (required)
+    //   - userName: string
+    //   - userPhoto: string
+    //   - content: string (required)
+    //   - sprintId: string
+    //   - likes: number
+    //   - createdAt: timestamp (required)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function hasOnlyAllowedFields(data, allowedFields) {
+      return data.keys().hasOnly(allowedFields);
+    }
+
+    function hasRequiredFields(data, requiredFields) {
+      return data.keys().hasAll(requiredFields);
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidUser(data) {
+      return hasRequiredFields(data, ['uid', 'email', 'niche', 'platform']) &&
+             hasOnlyAllowedFields(data, ['uid', 'email', 'niche', 'platform', 'brandVoice', 'targetAudience', 'goals', 'bio', 'createdAt', 'isPro']) &&
+             data.uid == request.auth.uid &&
+             isValidEmail(data.email) &&
+             data.niche is string && data.niche.size() < 100 &&
+             data.platform in ['TikTok', 'YouTube', 'Instagram'];
+    }
+
+    function isValidSprint(data) {
+      return hasRequiredFields(data, ['userId', 'sprint']) &&
+             hasOnlyAllowedFields(data, ['userId', 'niche', 'platform', 'trends', 'sprint', 'growthAdvice', 'createdAt']) &&
+             data.userId == request.auth.uid &&
+             data.sprint is list && data.sprint.size() <= 7;
+    }
+
+    function isValidPost(data) {
+      return hasRequiredFields(data, ['userId', 'content', 'createdAt']) &&
+             hasOnlyAllowedFields(data, ['userId', 'userName', 'userPhoto', 'content', 'sprintId', 'likes', 'createdAt', 'category', 'replies']) &&
+             data.userId == request.auth.uid &&
+             data.content is string && data.content.size() < 1000;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUser(request.resource.data);
+      allow update: if isOwner(userId) && isValidUser(request.resource.data) && 
+                      request.resource.data.uid == resource.data.uid;
+    }
+
+    match /public_profiles/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId);
+    }
+
+    match /sprints/{sprintId} {
+      allow read: if isAuthenticated(); // Allow reading shared sprints
+      allow create: if isAuthenticated() && isValidSprint(request.resource.data);
+      allow update: if isDocOwner() && isValidSprint(request.resource.data) &&
+                      request.resource.data.userId == resource.data.userId;
+      allow delete: if isDocOwner();
+    }
+
+    match /community/{postId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && isValidPost(request.resource.data);
+      allow update: if isAuthenticated() && (
+        (isDocOwner() && isValidPost(request.resource.data)) ||
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes', 'replies'])) // Allow liking and replying
+      );
+      allow delete: if isDocOwner();
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
