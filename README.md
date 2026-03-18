@@ -1,20 +1,66 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# CreatorFlow Pro 🚀
 
-# Run and deploy your AI Studio app
+The ultimate content strategy OS for modern creators. Generate viral sprints, track trends, and connect with a community of high-growth creators.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/f337ceaf-3675-4e2d-95ff-ce358cc91e94
+- **AI Trend Radar**: Real-time trend analysis using Gemini AI with Google Search grounding.
+- **7-Day Viral Sprints**: Custom content plans tailored to your niche and platform (TikTok, YouTube, Instagram).
+- **Creator Lab**: A community hub for sharing ideas, getting feedback, and collaborating.
+- **Brand Profile**: Professional dashboard to manage your creator identity and growth stats.
+- **Pro Subscriptions**: Integrated with Stripe for premium feature access.
 
-## Run Locally
+## Tech Stack
 
-**Prerequisites:**  Node.js
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS, Framer Motion (animations), Lucide React (icons)
+- **Backend**: Firebase (Auth, Firestore)
+- **AI**: Gemini 3.1 Flash (via `@google/genai`)
 
+## Getting Started
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### Prerequisites
+
+- Node.js 18+
+- Firebase Project
+- Gemini API Key
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/creatorflow-pro.git
+   cd creatorflow-pro
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Configure environment variables:
+   Create a `.env` file based on `.env.example` and add your keys.
+
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+## Deployment
+
+The app is ready for deployment on platforms like Vercel, Netlify, or Cloud Run.
+
+1. Build the project:
+   ```bash
+   npm run build
+   ```
+
+2. Deploy the `dist` folder.
+
+## Security Rules
+
+Ensure you deploy the `firestore.rules` to your Firebase project to protect user data.
+
+## License
+
+MIT

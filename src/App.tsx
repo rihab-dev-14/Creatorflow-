@@ -285,6 +285,7 @@ export default function App() {
   const [hookContext, setHookContext] = useState('');
   const [selectedCreator, setSelectedCreator] = useState<any | null>(null);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [dashboardTab, setDashboardTab] = useState<'overview' | 'billing' | 'api' | 'security'>('overview');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -865,17 +866,31 @@ export default function App() {
               {/* Social Proof / Logos */}
               <div className="border-y-4 border-black py-12 overflow-hidden bg-white">
                 <div className="flex items-center gap-12 animate-marquee whitespace-nowrap">
-                  {[1,2,3,4,5,6].map(i => (
-                    <div key={i} className="flex items-center gap-4 opacity-30 grayscale hover:grayscale-0 transition-all cursor-default">
-                      <Sparkles className="w-8 h-8" />
-                      <span className="text-2xl font-black uppercase italic tracking-tighter">PARTNER_{i}</span>
+                  {[
+                    { name: 'CREATOR_LAB', icon: Sparkles },
+                    { name: 'VIRAL_STUDIO', icon: Zap },
+                    { name: 'ALGO_HACKERS', icon: Target },
+                    { name: 'CONTENT_OS', icon: Layout },
+                    { name: 'SCALE_UP', icon: TrendingUp },
+                    { name: 'INFLUENCE_PRO', icon: Users }
+                  ].map((brand, i) => (
+                    <div key={i} className="flex items-center gap-4 opacity-30 grayscale hover:grayscale-0 transition-all cursor-default group">
+                      <brand.icon className="w-8 h-8 group-hover:text-emerald-500 transition-colors" />
+                      <span className="text-2xl font-black uppercase italic tracking-tighter">{brand.name}</span>
                     </div>
                   ))}
                   {/* Duplicate for seamless loop */}
-                  {[1,2,3,4,5,6].map(i => (
-                    <div key={`dup-${i}`} className="flex items-center gap-4 opacity-30 grayscale hover:grayscale-0 transition-all cursor-default">
-                      <Sparkles className="w-8 h-8" />
-                      <span className="text-2xl font-black uppercase italic tracking-tighter">PARTNER_{i}</span>
+                  {[
+                    { name: 'CREATOR_LAB', icon: Sparkles },
+                    { name: 'VIRAL_STUDIO', icon: Zap },
+                    { name: 'ALGO_HACKERS', icon: Target },
+                    { name: 'CONTENT_OS', icon: Layout },
+                    { name: 'SCALE_UP', icon: TrendingUp },
+                    { name: 'INFLUENCE_PRO', icon: Users }
+                  ].map((brand, i) => (
+                    <div key={`dup-${i}`} className="flex items-center gap-4 opacity-30 grayscale hover:grayscale-0 transition-all cursor-default group">
+                      <brand.icon className="w-8 h-8 group-hover:text-emerald-500 transition-colors" />
+                      <span className="text-2xl font-black uppercase italic tracking-tighter">{brand.name}</span>
                     </div>
                   ))}
                 </div>
@@ -990,6 +1005,74 @@ export default function App() {
                   </div>
                 </div>
               </div>
+
+              {/* FAQ Section */}
+              <motion.div 
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="space-y-16"
+              >
+                <div className="text-center space-y-4">
+                  <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter">Common Questions.</h2>
+                  <p className="text-lg font-bold opacity-60">Everything you need to know before you scale.</p>
+                </div>
+                <div className="max-w-3xl mx-auto space-y-6">
+                  {[
+                    { q: "How does the AI find trends?", a: "We use Google Search grounding to scan real-time search data. This ensures your content is based on what people are actually looking for, not just old data." },
+                    { q: "Is this only for TikTok?", a: "No! CreatorFlow Pro is optimized for TikTok, YouTube Shorts, and Instagram Reels. We tailor the strategy to each platform's unique algorithm." },
+                    { q: "Can I cancel my Pro subscription?", a: "Absolutely. You can manage your subscription directly from your dashboard. No hidden fees, no brutal contracts." },
+                    { q: "Do I own the content generated?", a: "100%. All scripts, hooks, and ideas generated are yours to use, modify, and monetize however you see fit." }
+                  ].map((faq, i) => (
+                    <Card key={i} className="bg-white">
+                      <details className="group">
+                        <summary className="flex justify-between items-center cursor-pointer list-none">
+                          <span className="text-lg font-black uppercase italic tracking-tight">{faq.q}</span>
+                          <ChevronDown className="w-6 h-6 group-open:rotate-180 transition-transform" />
+                        </summary>
+                        <p className="mt-4 font-medium opacity-70 leading-relaxed border-t-2 border-black/5 pt-4">
+                          {faq.a}
+                        </p>
+                      </details>
+                    </Card>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Contact Section */}
+              <motion.div 
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="bg-emerald-50 border-4 border-black p-12 md:p-24 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]"
+              >
+                <div className="grid md:grid-cols-2 gap-12 items-center">
+                  <div className="space-y-6">
+                    <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-none">Ready to <br /> <span className="text-emerald-600">Level Up?</span></h2>
+                    <p className="text-lg font-bold opacity-60">Have questions or need a custom agency plan? Our team of growth experts is ready to help you dominate the feed.</p>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-black text-white flex items-center justify-center border-2 border-black"><Mail className="w-5 h-5" /></div>
+                        <span className="font-black uppercase italic">support@creatorflow.pro</span>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-black text-white flex items-center justify-center border-2 border-black"><MessageSquare className="w-5 h-5" /></div>
+                        <span className="font-black uppercase italic">Live Chat (Pro Only)</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-white border-4 border-black p-8 space-y-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                    <div className="space-y-4">
+                      <input placeholder="Your Name" className="w-full p-4 border-2 border-black font-bold outline-none focus:bg-emerald-50" />
+                      <input placeholder="Email Address" className="w-full p-4 border-2 border-black font-bold outline-none focus:bg-emerald-50" />
+                      <textarea placeholder="How can we help you grow?" className="w-full p-4 border-2 border-black font-bold outline-none focus:bg-emerald-50 min-h-[120px]" />
+                    </div>
+                    <Button className="w-full py-4 text-xl">Send Message</Button>
+                  </div>
+                </div>
+              </motion.div>
 
               {/* Community Preview */}
               <motion.div 
@@ -1463,72 +1546,204 @@ export default function App() {
 
               <div className="grid lg:grid-cols-4 gap-8">
                 <div className="lg:col-span-3 space-y-8">
-                  <div className="grid md:grid-cols-3 gap-6">
-                    {[
-                      { label: 'Total Sprints', value: savedSprints.length, icon: Rocket, color: 'bg-emerald-500' },
-                      { label: 'Community Posts', value: posts.filter(p => p.userId === user.uid).length, icon: MessageSquare, color: 'bg-blue-500' },
-                      { label: 'Total Likes', value: posts.filter(p => p.userId === user.uid).reduce((acc, p) => acc + (p.likes || 0), 0), icon: Star, color: 'bg-yellow-400' }
-                    ].map((stat, i) => (
-                      <Card key={i} className="bg-white">
-                        <div className="flex items-center gap-4">
-                          <div className={cn("w-12 h-12 flex items-center justify-center text-white border-2 border-black", stat.color)}>
-                            <stat.icon className="w-6 h-6" />
-                          </div>
-                          <div>
-                            <div className="text-[10px] font-black uppercase opacity-40">{stat.label}</div>
-                            <div className="text-3xl font-black italic">{stat.value}</div>
-                          </div>
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-
-                  <div className="space-y-6">
-                    <h3 className="text-3xl font-black uppercase italic tracking-tighter">Your Sprints</h3>
-                    <div className="grid md:grid-cols-2 gap-6">
-                      {savedSprints.length > 0 ? savedSprints.map((sprint) => (
-                        <Card key={sprint.id} className="bg-white hover:translate-y-[-4px] transition-transform cursor-pointer" onClick={() => {
-                          setCreatorIdeas(sprint);
-                          setStep('dashboard');
-                        }}>
-                          <div className="space-y-4">
-                            <div className="flex justify-between items-start">
-                              <div className="bg-black text-white px-2 py-1 text-[8px] font-black uppercase tracking-widest">
-                                {new Date(sprint.createdAt?.seconds * 1000).toLocaleDateString()}
+                  {dashboardTab === 'overview' && (
+                    <>
+                      <div className="grid md:grid-cols-3 gap-6">
+                        {[
+                          { label: 'Total Sprints', value: savedSprints.length, icon: Rocket, color: 'bg-emerald-500' },
+                          { label: 'Community Posts', value: posts.filter(p => p.userId === user.uid).length, icon: MessageSquare, color: 'bg-blue-500' },
+                          { label: 'Total Likes', value: posts.filter(p => p.userId === user.uid).reduce((acc, p) => acc + (p.likes || 0), 0), icon: Star, color: 'bg-yellow-400' }
+                        ].map((stat, i) => (
+                          <Card key={i} className="bg-white">
+                            <div className="flex items-center gap-4">
+                              <div className={cn("w-12 h-12 flex items-center justify-center text-white border-2 border-black", stat.color)}>
+                                <stat.icon className="w-6 h-6" />
                               </div>
-                              <PlatformIcon platform={sprint.platform} />
+                              <div>
+                                <div className="text-[10px] font-black uppercase opacity-40">{stat.label}</div>
+                                <div className="text-3xl font-black italic">{stat.value}</div>
+                              </div>
                             </div>
-                            <div className="font-black uppercase italic text-lg">{sprint.niche} Sprint</div>
-                            <p className="text-[10px] font-bold opacity-60 line-clamp-2">{sprint.growthAdvice}</p>
-                            <div className="flex justify-between items-center pt-4 border-t-2 border-black/5">
-                              <div className="text-[10px] font-black uppercase">7 Days Generated</div>
-                              <ArrowRight className="w-4 h-4" />
+                          </Card>
+                        ))}
+                      </div>
+
+                      <div className="space-y-6">
+                        <h3 className="text-3xl font-black uppercase italic tracking-tighter">Your Sprints</h3>
+                        <div className="grid md:grid-cols-2 gap-6">
+                          {savedSprints.length > 0 ? savedSprints.map((sprint) => (
+                            <Card key={sprint.id} className="bg-white hover:translate-y-[-4px] transition-transform cursor-pointer" onClick={() => {
+                              setCreatorIdeas(sprint);
+                              setStep('dashboard');
+                            }}>
+                              <div className="space-y-4">
+                                <div className="flex justify-between items-start">
+                                  <div className="bg-black text-white px-2 py-1 text-[8px] font-black uppercase tracking-widest">
+                                    {new Date(sprint.createdAt?.seconds * 1000).toLocaleDateString()}
+                                  </div>
+                                  <PlatformIcon platform={sprint.platform} />
+                                </div>
+                                <div className="font-black uppercase italic text-lg">{sprint.niche} Sprint</div>
+                                <p className="text-[10px] font-bold opacity-60 line-clamp-2">{sprint.growthAdvice}</p>
+                                <div className="flex justify-between items-center pt-4 border-t-2 border-black/5">
+                                  <div className="text-[10px] font-black uppercase">7 Days Generated</div>
+                                  <ArrowRight className="w-4 h-4" />
+                                </div>
+                              </div>
+                            </Card>
+                          )) : (
+                            <div className="col-span-2 p-12 border-4 border-dashed border-black/10 text-center space-y-4">
+                              <Rocket className="w-12 h-12 mx-auto opacity-20" />
+                              <p className="font-bold opacity-40 uppercase tracking-widest text-sm">No sprints generated yet.</p>
+                              <Button onClick={() => setStep('onboarding')} variant="outline">Start Your First Sprint</Button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {dashboardTab === 'billing' && (
+                    <Card title="Billing & Subscription" className="bg-white">
+                      <div className="space-y-8">
+                        <div className="p-6 border-4 border-black bg-zinc-50 flex justify-between items-center">
+                          <div>
+                            <div className="text-[10px] font-black uppercase opacity-40">Current Plan</div>
+                            <div className="text-3xl font-black italic uppercase tracking-tighter">{profile.isPro ? 'Pro Creator' : 'Free Tier'}</div>
+                          </div>
+                          <Button 
+                            onClick={() => window.open(STRIPE_PRO_LINK, '_blank')}
+                            className={cn(profile.isPro ? "bg-black text-white" : "bg-yellow-400 text-black")}
+                          >
+                            {profile.isPro ? 'Manage Subscription' : 'Upgrade Now'}
+                          </Button>
+                        </div>
+                        
+                        <div className="space-y-4">
+                          <h4 className="font-black uppercase text-xs tracking-widest">Billing History</h4>
+                          <div className="border-2 border-black">
+                            <table className="w-full text-left text-xs">
+                              <thead className="bg-black text-white uppercase font-black">
+                                <tr>
+                                  <th className="p-3">Date</th>
+                                  <th className="p-3">Amount</th>
+                                  <th className="p-3">Status</th>
+                                  <th className="p-3">Invoice</th>
+                                </tr>
+                              </thead>
+                              <tbody className="font-bold">
+                                <tr className="border-b-2 border-black/5">
+                                  <td className="p-3">Mar 18, 2026</td>
+                                  <td className="p-3">$0.00</td>
+                                  <td className="p-3 text-emerald-600 uppercase">Active</td>
+                                  <td className="p-3"><button className="underline">Download</button></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  )}
+
+                  {dashboardTab === 'api' && (
+                    <Card title="API Integrations" className="bg-white">
+                      <div className="space-y-6">
+                        <p className="text-sm font-medium opacity-70">Connect your social accounts to enable one-click publishing and real-time analytics sync.</p>
+                        <div className="grid sm:grid-cols-2 gap-4">
+                          {[
+                            { name: 'YouTube', icon: Youtube, connected: false },
+                            { name: 'TikTok', icon: Music, connected: false },
+                            { name: 'Instagram', icon: Instagram, connected: false }
+                          ].map(platform => (
+                            <div key={platform.name} className="p-4 border-2 border-black flex items-center justify-between group hover:bg-zinc-50 transition-colors">
+                              <div className="flex items-center gap-3">
+                                <platform.icon className="w-5 h-5" />
+                                <span className="font-black uppercase italic">{platform.name}</span>
+                              </div>
+                              <Button variant="outline" className="py-1 px-3 text-[10px]">Connect</Button>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="p-4 bg-yellow-50 border-2 border-black text-[10px] font-bold uppercase tracking-widest">
+                          Pro tip: Connect your YouTube account to unlock AI-powered thumbnail A/B testing.
+                        </div>
+                      </div>
+                    </Card>
+                  )}
+
+                  {dashboardTab === 'security' && (
+                    <Card title="Security & Privacy" className="bg-white">
+                      <div className="space-y-6">
+                        <div className="space-y-4">
+                          <h4 className="font-black uppercase text-xs tracking-widest">Account Security</h4>
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center p-3 border-2 border-black">
+                              <div className="space-y-1">
+                                <div className="text-[10px] font-black uppercase">Two-Factor Authentication</div>
+                                <div className="text-[8px] font-bold opacity-40">Add an extra layer of security to your account.</div>
+                              </div>
+                              <Button variant="outline" className="py-1 px-3 text-[10px]">Enable</Button>
+                            </div>
+                            <div className="flex justify-between items-center p-3 border-2 border-black">
+                              <div className="space-y-1">
+                                <div className="text-[10px] font-black uppercase">Change Password</div>
+                                <div className="text-[8px] font-bold opacity-40">Last changed 3 months ago.</div>
+                              </div>
+                              <Button variant="outline" className="py-1 px-3 text-[10px]">Update</Button>
                             </div>
                           </div>
-                        </Card>
-                      )) : (
-                        <div className="col-span-2 p-12 border-4 border-dashed border-black/10 text-center space-y-4">
-                          <Rocket className="w-12 h-12 mx-auto opacity-20" />
-                          <p className="font-bold opacity-40 uppercase tracking-widest text-sm">No sprints generated yet.</p>
-                          <Button onClick={() => setStep('onboarding')} variant="outline">Start Your First Sprint</Button>
                         </div>
-                      )}
-                    </div>
-                  </div>
+                        
+                        <div className="pt-6 border-t-2 border-black/5 space-y-4">
+                          <h4 className="font-black uppercase text-xs tracking-widest text-red-600">Danger Zone</h4>
+                          <Button variant="outline" className="border-red-600 text-red-600 hover:bg-red-50 w-full">Delete Account</Button>
+                        </div>
+                      </div>
+                    </Card>
+                  )}
                 </div>
 
                 <div className="space-y-8">
                   <Card title="Account Settings" icon={Settings}>
                     <div className="space-y-4">
-                      <button className="w-full text-left p-3 border-2 border-black font-bold text-xs hover:bg-zinc-50 flex justify-between items-center">
+                      <button 
+                        onClick={() => setDashboardTab('overview')}
+                        className={cn(
+                          "w-full text-left p-3 border-2 border-black font-bold text-xs transition-all flex justify-between items-center",
+                          dashboardTab === 'overview' ? "bg-black text-white" : "hover:bg-zinc-50"
+                        )}
+                      >
+                        Overview
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => setDashboardTab('billing')}
+                        className={cn(
+                          "w-full text-left p-3 border-2 border-black font-bold text-xs transition-all flex justify-between items-center",
+                          dashboardTab === 'billing' ? "bg-black text-white" : "hover:bg-zinc-50"
+                        )}
+                      >
                         Billing & Subscription
                         <ArrowRight className="w-4 h-4" />
                       </button>
-                      <button className="w-full text-left p-3 border-2 border-black font-bold text-xs hover:bg-zinc-50 flex justify-between items-center">
+                      <button 
+                        onClick={() => setDashboardTab('api')}
+                        className={cn(
+                          "w-full text-left p-3 border-2 border-black font-bold text-xs transition-all flex justify-between items-center",
+                          dashboardTab === 'api' ? "bg-black text-white" : "hover:bg-zinc-50"
+                        )}
+                      >
                         API Integrations
                         <ArrowRight className="w-4 h-4" />
                       </button>
-                      <button className="w-full text-left p-3 border-2 border-black font-bold text-xs hover:bg-zinc-50 flex justify-between items-center">
+                      <button 
+                        onClick={() => setDashboardTab('security')}
+                        className={cn(
+                          "w-full text-left p-3 border-2 border-black font-bold text-xs transition-all flex justify-between items-center",
+                          dashboardTab === 'security' ? "bg-black text-white" : "hover:bg-zinc-50"
+                        )}
+                      >
                         Security & Privacy
                         <ArrowRight className="w-4 h-4" />
                       </button>
